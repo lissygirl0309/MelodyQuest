@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Melody Quest</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+</head>
+<body>
+        <div class="taskbar" role="banner" aria-label="Task bar">
+                <img src="MelodyQuest.svg" alt="Melody Quest logo" class="logo" />
+                <div id="collectedNotes" class="collected-notes" aria-live="polite" title="Collected notes"></div>
+        </div>
+
+        <main class="main-content" role="main">
+                <!-- Scene 0: Logo only -->
+                <section class="scene" data-stage="0">
+                        <h1>
+                                <img src="MelodyQuest.svg" alt="Melody Quest" class="page-title-logo" />
+                        </h1>
+                </section>
+
+                                <!-- Scene 1: Ralphie's introduction (speech bubble) -->
+                                <section class="scene" data-stage="1">
+                                        <div class="intro-row">
+                                                <div class="speech-bubble">
+                                                        <p>Hello, and Welcome to Melody Quest! I'm Ralphie, your gallery guide and master of games.</p>
+                                                </div>
+
+                                                <img src="SeminarCharacter2.svg" alt="Ralphie the Guide" class="character" height="200" width="100">
+                                        </div>
+                                                                </section>
+
+                                                                <!-- Scene 2: SeminarCharacter3 anchored above bottom bar on the right -->
+                                                                <section class="scene" data-stage="2">
+                                                                        <div class="scene2-row">
+                                                                                <div class="speech-bubble">
+                                                                                        <p>Here's how it works: A prompt will appear relating to a poster in the gallery. You can scan the QR code attached to the corresponding poster to reveal more info about that poster. Then, you will either be given a music note prize, or you will be asked a trivia question relating to previous info. The goal is to collect all the notes to reveal a related song when they are put together! Ready?</p>
+                                                                                </div>
+
+                                                                                <img src="SeminarCharacter3.svg" alt="Seminar Character 3" class="bottom-character">
+                                                                        </div>
+                                                                </section>
+
+                                                                <!-- Scene 3: SeminarCharacter4 anchored above bottom bar on the right (similar to Scene 2) -->
+                                                                <section class="scene" data-stage="3">
+                                                                        <div class="scene2-row">
+                                                                                <div class="speech-bubble">
+                                                                                        <p>First, spin the wheel to collect your first note!</p>
+                                                                                </div>
+
+                                                                                <div class="bottom-character-wrapper">
+                                                                                        <img src="SeminarCharacter4.svg" alt="Seminar Character 4" class="bottom-character-inner">
+                                                                                </div>
+                                                                        </div>
+
+                                                                        <!-- Wheel spinner -->
+                                                                                                                                                <div class="wheel-stage">
+                                                                                                                                                        <div class="wheel-container">
+                                                                                                                                                                <!-- Inline SVG wheel (6 slices) -->
+                                                                                                                                                                <svg id="wheel" viewBox="0 0 500 500" class="wheel-svg" role="img" aria-label="Prize wheel">
+                                                                                                                                                                        <g id="wheelGroup">
+                                                                                                                                                                                <path d="M250 250 L250 50 A200 200 0 0 1 423.205 150 Z" fill="#f94144" stroke="#fff" stroke-width="2"/>
+                                                                                                                                                                                <path d="M250 250 L423.205 150 A200 200 0 0 1 423.205 350 Z" fill="#f3722c" stroke="#fff" stroke-width="2"/>
+                                                                                                                                                                                <path d="M250 250 L423.205 350 A200 200 0 0 1 250 450 Z" fill="#f8961e" stroke="#fff" stroke-width="2"/>
+                                                                                                                                                                                <path d="M250 250 L250 450 A200 200 0 0 1 76.795 350 Z" fill="#f9c74f" stroke="#fff" stroke-width="2"/>
+                                                                                                                                                                                <path d="M250 250 L76.795 350 A200 200 0 0 1 76.795 150 Z" fill="#90be6d" stroke="#fff" stroke-width="2"/>
+                                                                                                                                                                                <path d="M250 250 L76.795 150 A200 200 0 0 1 250 50 Z" fill="#577590" stroke="#fff" stroke-width="2"/>
+                                                                                                                                                                                <!-- Labels -->
+                                                                                                                                                                                <text class="slice-text" x="310" y="146.1">C</text>
+                                                                                                                                                                                <text class="slice-text" x="370" y="250">C</text>
+                                                                                                                                                                                <text class="slice-text" x="310" y="353.9">C</text>
+                                                                                                                                                                                <text class="slice-text" x="190" y="353.9">C</text>
+                                                                                                                                                                                <text class="slice-text" x="130" y="250">C</text>
+                                                                                                                                                                                <text class="slice-text" x="190" y="146.1">C</text>
+                                                                                                                                                                        </g>
+                                                                                                                                                                </svg>
+                                                                                                                                                                <div class="wheel-pointer" aria-hidden="true"></div>
+                                                                                                                                                        </div>
+                                                                                                                                                        <div class="wheel-controls">
+                                                                                                                                                                <button id="spinBtn" class="primary-action">Spin</button>
+                                                                                                                                                                <button id="resetBtn" class="secondary-action">Reset</button>
+                                                                                                                                                                <div id="wheelResult" class="wheel-result" aria-live="polite"></div>
+                                                                                                                                                        </div>
+                                                                                                                                                </div>
+                                                                </section>
+
+                                                                <!-- Scene 4: Camera scene (modeled on Scene 2) -->
+                                                                <section class="scene" data-stage="4">
+                                                                        <div class="scene2-row">
+                                                                                <div class="speech-bubble">
+                                                                                        <p>Can you find the poster about the evolution of Folk music? Tap Open Camera to start the live view, and Stop Camera to turn it off.</p>
+                                                                                </div>
+
+                                                                                <img src="SeminarCharacter4.svg" alt="Seminar Character 4" class="bottom-character">
+                                                                        </div>
+
+                                                                        <div class="camera-stage">
+                                                                                <div class="camera-controls">
+                                                                                        <canvas id="cameraCanvas" style="display:none; width:260px; height:auto; border-radius:8px; background:#000"></canvas>
+                                                                                        <video id="cameraVideo" autoplay playsinline muted style="display:none;"></video>
+                                                                                        <div id="qrResult" class="qr-result" style="margin:10px 0; padding:10px; background:#f0f0f0; border-radius:5px; display:none;"></div>
+                                                                                        <div class="camera-buttons">
+                                                                                                <button id="cameraBtn" class="primary-action">Open Camera</button>
+                                                                                                <button id="stopCameraBtn" class="secondary-action" disabled>Stop Camera</button>
+                                                                                        </div>
+                                                                                </div>
+                                                                        </div>
+                                                                </section>
+
+                                                                <!-- Scene 5: Secret QR-unlocked scene -->
+                                                                <section class="scene" data-stage="5">
+                                                                        <div class="scene2-row">
+                                                                                <div class="speech-bubble">
+                                                                                        <p>🎉 You have unlocked more information! [information about poster and inspiration will appear here.]</p>
+                                                                                </div>
+
+                                                                                <img src="SeminarCharacter3.svg" alt="Seminar Character 3" class="bottom-character">
+                                                                        </div>
+                                                                </section>
+
+                                                                <!-- Scene 6: Multiple choice question -->
+                                                                <section class="scene" data-stage="6">
+                                                                        <div class="scene2-row">
+                                                                                <div class="speech-bubble">
+                                                                                        <p>Time to test your knowledge! Answer the question below:</p>
+                                                                                </div>
+
+                                                                                <img src="SeminarCharacter3.svg" alt="Seminar Character 3" class="bottom-character">
+                                                                        </div>
+
+                                                                        <div class="quiz-stage">
+                                                                                <div class="quiz-question">
+                                                                                        <h3>What is 1 + 1?</h3>
+                                                                                </div>
+                                                                                <div class="quiz-choices">
+                                                                                        <button class="quiz-choice" data-answer="wrong">1</button>
+                                                                                        <button class="quiz-choice" data-answer="correct">2</button>
+                                                                                        <button class="quiz-choice" data-answer="wrong">3</button>
+                                                                                        <button class="quiz-choice" data-answer="wrong">4</button>
+                                                                                </div>
+                                                                                <div id="quizFeedback" class="quiz-feedback"></div>
+                                                                        </div>
+                                                                </section>
+
+                </main>
+
+                <div class="bottombar" role="contentinfo" aria-label="Bottom navigation">
+                        <div class="bottombar-content">
+                                <button id="backBtn" class="nav-btn">Back</button>
+                                <button id="nextBtn" class="nav-btn">Next</button>
+                        </div>
+                </div>
+
+        <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,338 @@
+/* Extracted styles from index.html */
+body {
+    background-color: #cacff8;
+    margin: 0;
+    padding-top: 64px; /* space for the top task bar */
+    padding-bottom: 50px; /* space for the bottom bar */
+    min-height: 100vh;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+.taskbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background: linear-gradient(90deg, #2c1f70 0%, #422864 100%);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    z-index: 9999;
+}
+
+.taskbar .logo {
+    height: 50px;
+    width: auto;
+    margin-right: 12px;
+    display: inline-block;
+}
+
+.taskbar .title {
+    font-weight: 700;
+    letter-spacing: 0.2px;
+}
+
+.page-title-logo {
+    width: min(520px, 80vw);
+    height: auto;
+    display: block;
+    margin: 18px auto 24px auto;
+    overflow: visible;
+}
+
+/* Center the main page content below the fixed taskbar */
+.main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* center horizontally */
+    justify-content: flex-start; /* stack from top so logo sits above content */
+    min-height: calc(100vh - 64px - 50px); /* account for taskbar + bottombar height */
+    padding: 36px 24px 24px 24px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.main-content img {
+    max-width: 100%;
+    height: auto;
+}
+
+h1 { margin: 0; padding: 0 }
+
+svg { overflow: visible }
+
+/* Full-width bottom bar (matches top taskbar width) */
+.bottombar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px;
+    background: linear-gradient(90deg, #2c1f70 0%, #422864 100%);
+    color: #ffffff;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.12);
+    z-index: 9998;
+}
+.bottombar .bottombar-content {
+    font-size: 0.95rem;
+}
+
+/* Scenes: show one at a time */
+.scene { display: none; }
+.scene.active { display: block; }
+
+/* Navigation buttons */
+.nav-btn {
+    background: #ffffff;
+    color: #2c1f70;
+    border: 0;
+    padding: 8px 14px;
+    margin: 0 6px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.nav-btn:disabled { opacity: 0.45; cursor: default; }
+
+/* Primary / secondary action styles (optional) */
+.primary-action {
+    background: #5b3a9e;
+    color: #fff;
+    border: 0;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.secondary-action {
+    background: transparent;
+    color: #2c1f70;
+    border: 2px solid rgba(255,255,255,0.14);
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* Intro row: speech bubble and character side-by-side */
+.intro-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.speech-bubble {
+    background: #eecb99; /* light purple for contrast */
+    color: #000000;
+    padding: 16px 18px;
+    border-radius: 14px;
+    box-shadow: 0 8px 18px rgba(66, 65, 67, 0.08);
+    max-width: 560px;
+    position: relative;
+    border: 1px solid rgb(150, 89, 14);
+    font-size: 1.05rem;
+    line-height: 1.4;
+}
+
+
+
+.character {
+    width: auto;
+    height: 200px;
+    object-fit: contain;
+}
+
+@media (max-width: 640px) {
+    .intro-row { flex-direction: column-reverse; align-items: center; }
+}
+
+/* Bottom-character: fixed so its bottom aligns with the top of the bottom bar, anchored to the right */
+.bottom-character {
+    position: fixed;
+    right: 16px; /* distance from right edge */
+    bottom: 16px; /* overlap into the bottombar so the character visually touches it */
+    height: 180px; /* visual height for SeminarCharacter3 */
+    max-height: 200px;
+    width: auto;
+    transform: none;
+    z-index: 10001; /* above bottombar */
+    pointer-events: auto;
+}
+
+@media (max-width: 640px) {
+    /* hide or shrink the bottom-character on small screens to avoid covering content */
+    .bottom-character { display: none; }
+}
+
+/* Clipping wrapper and inner image for SeminarCharacter4 so its visible artwork
+   can be shifted to exactly match SeminarCharacter3 placement. Adjust
+   --char4-offset if needed (positive moves image down). */
+.bottom-character-wrapper {
+    position: fixed;
+    right: 16px;
+    bottom: 6px; /* align with bottombar top */
+    height: 200px; /* slightly larger wrapper to allow inner nudging */
+    width: auto;
+    overflow: hidden;
+    z-index: 10002; /* above bottombar and other characters */
+    pointer-events: auto;
+}
+.bottom-character-wrapper .bottom-character-inner {
+    display: block;
+    height: 200px; /* slightly larger so the visible artwork matches size */
+    width: auto;
+    object-fit: contain;
+    transform: translateY(-6px); /* lift image up so its bottom aligns with bottombar */
+}
+
+@media (max-width: 640px) {
+    .bottom-character-wrapper { display: none; }
+}
+
+/* Scene 2 paragraph: keep content narrow so it condenses vertically
+   (centers a narrow column, left-aligns text for readability) */
+.scene[data-stage="2"] p {
+    max-width: 360px;
+    width: min(72vw, 360px);
+    margin: 12px auto;
+    text-align: left;
+    line-height: 1.6;
+    font-size: 1rem;
+    hyphens: auto;
+    word-break: break-word;
+}
+
+/* Wheel spinner styles (Scene 3) */
+.wheel-stage {
+    margin: 22px auto 8px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+.wheel-container {
+    position: relative;
+    width: 260px;
+    height: 260px;
+}
+.wheel {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    box-shadow: 0 8px 20px rgba(34, 20, 80, 0.12);
+    border: 6px solid rgba(255,255,255,0.85);
+    background: conic-gradient(
+        #f94144 0deg 60deg,
+        #f3722c 60deg 120deg,
+        #f8961e 120deg 180deg,
+        #f9c74f 180deg 240deg,
+        #90be6d 240deg 300deg,
+        #577590 300deg 360deg
+    );
+    transition: transform 4s cubic-bezier(0.33, 1, 0.68, 1);
+}
+.wheel-pointer {
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-bottom: 18px solid #2c1f70;
+    z-index: 10;
+}
+.wheel-svg { width: 100%; height: 100%; display: block; }
+.wheel-svg .slice-text { fill: #ffffff; font-weight: 800; font-size: 28px; text-anchor: middle; dominant-baseline: middle; pointer-events: none; }
+.wheel-controls { display:flex; gap:12px; align-items:center; }
+.wheel-result { min-width: 180px; text-align:center; font-weight:700; color:#2c1f70 }
+
+@media (max-width: 520px) {
+    .wheel-container { width: 200px; height: 200px; }
+    .wheel-svg .slice-text { font-size: 18px; }
+}
+
+/* Collected notes display (small pills in the taskbar) */
+.collected-notes {
+    margin-left: 12px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+.collected-note {
+    background: rgba(255,255,255,0.95);
+    color: #2c1f70;
+    border-radius: 10px;
+    padding: 6px 8px;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(34,20,80,0.08);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+}
+
+/* Quarter-note popup shown after winning */
+.quarter-note {
+    position: fixed;
+    left: 50%;
+    top: 30%;
+    transform: translate(-50%, -50%) scale(0.85);
+    background: rgba(255,255,255,0.98);
+    padding: 12px 14px;
+    border-radius: 12px;
+    box-shadow: 0 12px 30px rgba(34,20,80,0.18);
+    z-index: 20000;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    animation: quarterPop 700ms cubic-bezier(.22,.9,.3,1) forwards;
+}
+.quarter-note .note-symbol { font-size: 28px; color: #2c1f70; font-weight:700 }
+.quarter-note .note-text { font-weight:700; color:#2c1f70 }
+@keyframes quarterPop {
+    0% { transform: translate(-50%, -50%) scale(0.6); opacity: 0 }
+    60% { transform: translate(-50%, -50%) scale(1.08); opacity: 1 }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 1 }
+}
+
+/* Confetti pieces */
+.confetti {
+    position: fixed;
+    width: 10px;
+    height: 16px;
+    opacity: 0.95;
+    z-index: 20000;
+    pointer-events: none;
+    transform-origin: center;
+    animation: confettiFall 1200ms linear forwards;
+    border-radius: 2px;
+}
+@keyframes confettiFall {
+    0% { transform: translateY(0) rotate(0); opacity: 1 }
+    100% { transform: translateY(420px) rotate(720deg); opacity: 0 }
+}
+
+/* Minor vertical adjustment: move Scene 4 character down by 4px */
+.scene[data-stage="4"] .bottom-character {
+    bottom: 12px; /* was 16px globally; lowered by 4px */
+}
+
+/* Move Scene 6 incorrect-answer character (SeminarCharacter6) down by 4px */
+.scene[data-stage="6"] .bottom-character[src="SeminarCharacter6.svg"] {
+    bottom: 11px; /* lowered one more pixel from 12px */
+}
+
+/* Move Scene 6 correct-answer character (SeminarCharacter5) down by 4px */
+.scene[data-stage="6"] .bottom-character[src="SeminarCharacter5.svg"] {
+    bottom: 12px; /* lowered from 16px */
+}
