@@ -180,14 +180,23 @@ svg { overflow: visible }
         max-width: 60vw;                  /* scale to screen width */
         transform: none !important;
         z-index: 9997;                    /* behind bottombar (9998) and taskbar (9999) */
-        pointer-events: none;              /* do not block button taps */
+        pointer-events: none !important;   /* do not block button taps */
     }
     .bottom-character-wrapper .bottom-character-inner {
         height: auto;
         max-height: 24vh;
         transform: none !important;
         display: block !important;
-        pointer-events: none;
+        pointer-events: none !important;
+    }
+    /* Ensure bottombar buttons remain tappable */
+    .bottombar {
+        pointer-events: auto !important;
+    }
+    .bottombar .nav-btn {
+        pointer-events: auto !important;
+        position: relative;
+        z-index: 10000;
     }
 }
 
