@@ -168,8 +168,27 @@ svg { overflow: visible }
 }
 
 @media (max-width: 640px) {
-    /* hide or shrink the bottom-character on small screens to avoid covering content */
-    .bottom-character { display: none; }
+    /* Mobile: keep characters attached to the bottom bar, but behind buttons */
+    .bottom-character,
+    .bottom-character-wrapper {
+        position: fixed !important;       /* attach to viewport bottom */
+        right: 16px !important;
+        bottom: 12px !important;          /* visually touch bottombar */
+        display: block !important;
+        height: auto;
+        max-height: 24vh;                 /* compact on small screens */
+        max-width: 60vw;                  /* scale to screen width */
+        transform: none !important;
+        z-index: 9997;                    /* behind bottombar (9998) and taskbar (9999) */
+        pointer-events: none;              /* do not block button taps */
+    }
+    .bottom-character-wrapper .bottom-character-inner {
+        height: auto;
+        max-height: 24vh;
+        transform: none !important;
+        display: block !important;
+        pointer-events: none;
+    }
 }
 
 /* Clipping wrapper and inner image for SeminarCharacter4 so its visible artwork
