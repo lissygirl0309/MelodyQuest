@@ -39,8 +39,8 @@ document.addEventListener('DOMContentLoaded', () => {
     current = index;
     localStorage.setItem('mq-stage', String(current));
     if (backBtn) backBtn.disabled = current === 0;
-    // Disable Next in Scene 4, 7, 9 (camera scenes), disable at end
-    if (nextBtn) nextBtn.disabled = (current === 4) || (current === 7) || (current === 9) || (current >= 9);
+    // Disable Next in camera scenes (4,7,9) and at end
+    if (nextBtn) nextBtn.disabled = (current === 4) || (current === 7) || (current === 9) || (current >= 10);
     // Award scene 8 prize (note E) once on first visit
     if (current === 8 && !scene8PrizeGiven) {
       handleSpinResult('E');
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Wire persistent nav buttons
   if (backBtn) backBtn.addEventListener('click', () => show(current - 1));
-  if (nextBtn) nextBtn.addEventListener('click', () => show(Math.min(current + 1, 9)));
+  if (nextBtn) nextBtn.addEventListener('click', () => show(Math.min(current + 1, 10)));
 
   // Wire primary action inside each scene (eg the Ready! button),
   // but DO NOT treat the camera open button as a primary navigation action.
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Optional: keyboard navigation (ArrowRight / ArrowLeft)
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight') show(Math.min(current + 1, 9));
+    if (e.key === 'ArrowRight') show(Math.min(current + 1, 10));
     if (e.key === 'ArrowLeft') show(Math.max(current - 1, 0));
   });
 
