@@ -27,12 +27,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const nextBtn = document.getElementById('nextBtn');
   const PRIMARY_SELECTOR = '.primary-action';
   const SCENE8_PRIZE_KEY = 'mq-scene8-prize';
+  const SCENE10_PRIZE_KEY = 'mq-scene10-prize';
   let scene8PrizeGiven = false;
+  let scene10PrizeGiven = false;
 
   // Restore saved stage or start at 0
   let current = parseInt(localStorage.getItem('mq-stage') || '0', 10);
   if (Number.isNaN(current) || current < 0 || current >= scenes.length) current = 0;
   try { scene8PrizeGiven = localStorage.getItem(SCENE8_PRIZE_KEY) === '1'; } catch (e) {}
+  try { scene10PrizeGiven = localStorage.getItem(SCENE10_PRIZE_KEY) === '1'; } catch (e) {}
 
   function show(index) {
     if (index < 0 || index >= scenes.length) return;
@@ -47,6 +50,12 @@ document.addEventListener('DOMContentLoaded', () => {
       handleSpinResult('E');
       scene8PrizeGiven = true;
       try { localStorage.setItem(SCENE8_PRIZE_KEY, '1'); } catch (e) {}
+    }
+    // Award scene 10 prize (note F) once on first visit
+    if (current === 10 && !scene10PrizeGiven) {
+      handleSpinResult('F');
+      scene10PrizeGiven = true;
+      try { localStorage.setItem(SCENE10_PRIZE_KEY, '1'); } catch (e) {}
     }
   }
 
@@ -258,8 +267,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Reset handler: clear collected notes and spun flag, reset visuals
   if (resetBtn) {
     resetBtn.addEventListener('click', () => {
-      try { localStorage.removeItem('mq-collected'); localStorage.removeItem('mq-spun'); localStorage.removeItem(SCENE8_PRIZE_KEY); } catch (e) {}
+      try { localStorage.removeItem('mq-collected'); localStorage.removeItem('mq-spun'); localStorage.removeItem(SCENE8_PRIZE_KEY); localStorage.removeItem(SCENE10_PRIZE_KEY); } catch (e) {}
       scene8PrizeGiven = false;
+      scene10PrizeGiven = false;
       updateCollectedUI();
       // reset wheel rotation
       lastRotation = 0;
