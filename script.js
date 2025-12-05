@@ -43,8 +43,8 @@ document.addEventListener('DOMContentLoaded', () => {
     current = index;
     localStorage.setItem('mq-stage', String(current));
     if (backBtn) backBtn.disabled = current === 0;
-    // Disable Next in camera scenes (4,7,9) and at end
-    if (nextBtn) nextBtn.disabled = (current === 4) || (current === 7) || (current === 9) || (current >= 11);
+    // Disable Next in camera scenes (4,7,9) and at end (>= 12 means Scene 12 or beyond doesn't exist yet)
+    if (nextBtn) nextBtn.disabled = (current === 4) || (current === 7) || (current === 9) || (current >= 12);
     // Award scene 8 prize (note E) once on first visit
     if (current === 8 && !scene8PrizeGiven) {
       handleSpinResult('E');
