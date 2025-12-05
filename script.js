@@ -248,20 +248,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
     playNote(letter);
     const arr = loadCollected();
-    if (!arr.includes(letter)) {
-      arr.push(letter);
-      saveCollected(arr);
-      updateCollectedUI();
-      // celebration
-      showQuarterNote(letter);
-      spawnConfetti(26);
-      // swap the scene 3 character to the celebratory one
-      if (scene3Char) scene3Char.src = CHAR5_SRC;
-    } else {
-      // already collected - still show note briefly
-      showQuarterNote(letter);
-      if (scene3Char) scene3Char.src = CHAR5_SRC;
-    }
+    // Always add the note (allow duplicates)
+    arr.push(letter);
+    saveCollected(arr);
+    updateCollectedUI();
+    // celebration
+    showQuarterNote(letter);
+    spawnConfetti(26);
+    // swap the scene 3 character to the celebratory one
+    if (scene3Char) scene3Char.src = CHAR5_SRC;
   }
 
   // Reset handler: clear collected notes and spun flag, reset visuals
