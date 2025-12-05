@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (sceneParam && !Number.isNaN(parseInt(sceneParam, 10))) return parseInt(sceneParam, 10);
       // explicit allowlist for provided QR short link
       if (url.hostname.includes('qrcodeveloper.com') && url.pathname.includes('-yu71YHLI1K6fVbT')) return 8;
+      if (url.hostname.includes('qrcodeveloper.com') && url.pathname.includes('FPvbrgycb7LAysQB')) return 10;
     } catch (e) {}
     return null;
   }
