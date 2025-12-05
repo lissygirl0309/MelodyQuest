@@ -25,10 +25,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const backBtn = document.getElementById('backBtn');
   const nextBtn = document.getElementById('nextBtn');
   const PRIMARY_SELECTOR = '.primary-action';
+  const SCENE8_PRIZE_KEY = 'mq-scene8-prize';
+  let scene8PrizeGiven = false;
 
   // Restore saved stage or start at 0
   let current = parseInt(localStorage.getItem('mq-stage') || '0', 10);
   if (Number.isNaN(current) || current < 0 || current >= scenes.length) current = 0;
+  try { scene8PrizeGiven = localStorage.getItem(SCENE8_PRIZE_KEY) === '1'; } catch (e) {}
 
   function show(index) {
     if (index < 0 || index >= scenes.length) return;
@@ -38,6 +41,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (backBtn) backBtn.disabled = current === 0;
     // Disable Next in Scene 4 and 7 (camera scenes), disable at end
     if (nextBtn) nextBtn.disabled = (current === 4) || (current === 7) || (current >= 8);
+    // Award scene 8 prize (note E) once on first visit
+    if (current === 8 && !scene8PrizeGiven) {
+      handleSpinResult('E');
+      scene8PrizeGiven = true;
+      try { localStorage.setItem(SCENE8_PRIZE_KEY, '1'); } catch (e) {}
+    }
   }
 
   // Expose a simple helper for DevTools: mqShow(index)
@@ -248,7 +257,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Reset handler: clear collected notes and spun flag, reset visuals
   if (resetBtn) {
     resetBtn.addEventListener('click', () => {
-      try { localStorage.removeItem('mq-collected'); localStorage.removeItem('mq-spun'); } catch (e) {}
+      try { localStorage.removeItem('mq-collected'); localStorage.removeItem('mq-spun'); localStorage.removeItem(SCENE8_PRIZE_KEY); } catch (e) {}
+      scene8PrizeGiven = false;
       updateCollectedUI();
       // reset wheel rotation
       lastRotation = 0;

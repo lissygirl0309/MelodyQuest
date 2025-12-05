@@ -164,7 +164,7 @@ svg { overflow: visible }
     width: auto;
     transform: none;
     z-index: 10001; /* above bottombar */
-    pointer-events: auto;
+    pointer-events: none; /* never block UI interactions */
 }
 
 @media (max-width: 640px) {
@@ -211,7 +211,7 @@ svg { overflow: visible }
     width: auto;
     overflow: hidden;
     z-index: 10002; /* above bottombar and other characters */
-    pointer-events: auto;
+    pointer-events: none; /* never block UI interactions */
 }
 .bottom-character-wrapper .bottom-character-inner {
     display: block;
