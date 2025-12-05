@@ -283,7 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (spinBtn) spinBtn.disabled = false;
       
       // Reset Scene 6 quiz
-      const quizChoices = document.querySelectorAll('.quiz-choice');
+      const quizChoices = document.querySelectorAll('.scene[data-stage="6"] .quiz-choice');
       const quizFeedback = document.getElementById('quizFeedback');
       quizChoices.forEach(c => {
         c.disabled = false;
