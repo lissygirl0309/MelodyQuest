@@ -6,6 +6,22 @@ document.addEventListener('DOMContentLoaded', () => {
   const scenes = Array.from(document.querySelectorAll('.scene'));
   if (!scenes.length) return;
 
+  function resolveSceneFromText(text) {
+    if (!text) return null;
+    // direct pattern: scene:8 or scene=8 anywhere in the string
+    const m = String(text).match(/scene[:=]?\s*([0-9]+)/i);
+    if (m && !Number.isNaN(parseInt(m[1], 10))) return parseInt(m[1], 10);
+    // try URL query param ?scene=8
+    try {
+      const url = new URL(String(text));
+      const sceneParam = url.searchParams.get('scene');
+      if (sceneParam && !Number.isNaN(parseInt(sceneParam, 10))) return parseInt(sceneParam, 10);
+      // explicit allowlist for provided QR short link
+      if (url.hostname.includes('qrcodeveloper.com') && url.pathname.includes('-yu71YHLI1K6fVbT')) return 8;
+    } catch (e) {}
+    return null;
+  }
+
   const backBtn = document.getElementById('backBtn');
   const nextBtn = document.getElementById('nextBtn');
   const PRIMARY_SELECTOR = '.primary-action';
@@ -20,8 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
     current = index;
     localStorage.setItem('mq-stage', String(current));
     if (backBtn) backBtn.disabled = current === 0;
-    // Disable Next in Scene 4 (camera scene), allow navigation through Scene 6 otherwise
-    if (nextBtn) nextBtn.disabled = (current === 4) || (current >= 6);
+    // Disable Next in Scene 4 and 7 (camera scenes), disable at end
+    if (nextBtn) nextBtn.disabled = (current === 4) || (current === 7) || (current >= 8);
   }
 
   // Expose a simple helper for DevTools: mqShow(index)
@@ -34,14 +50,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Wire persistent nav buttons
   if (backBtn) backBtn.addEventListener('click', () => show(current - 1));
-  if (nextBtn) nextBtn.addEventListener('click', () => show(Math.min(current + 1, 6)));
+  if (nextBtn) nextBtn.addEventListener('click', () => show(Math.min(current + 1, 8)));
 
   // Wire primary action inside each scene (eg the Ready! button),
   // but DO NOT treat the camera open button as a primary navigation action.
   scenes.forEach(scene => {
     const primary = scene.querySelector(PRIMARY_SELECTOR);
     // Do not auto-wire navigation for camera or spin buttons
-    if (primary && primary.id !== 'cameraBtn' && primary.id !== 'spinBtn') {
+    if (primary && primary.id !== 'cameraBtn' && primary.id !== 'cameraBtn7' && primary.id !== 'spinBtn') {
       primary.addEventListener('click', () => {
         // move to next scene if possible (respect cap at 6)
         show(Math.min(current + 1, 6));
@@ -51,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Optional: keyboard navigation (ArrowRight / ArrowLeft)
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight') show(Math.min(current + 1, 6));
+    if (e.key === 'ArrowRight') show(Math.min(current + 1, 8));
     if (e.key === 'ArrowLeft') show(Math.max(current - 1, 0));
   });
 
@@ -287,7 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const canvas = cameraCanvas;
     const video = cameraVideo;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
     
     if (video.readyState === video.HAVE_ENOUGH_DATA) {
       canvas.height = video.videoHeight;
@@ -303,7 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
           qrResult.innerHTML = `<strong>QR Code Found:</strong><br>${text}`;
           qrResult.style.display = 'block';
         }
-        console.log('QR Code detected:', text);
+        console.log('QR Code detected (Scene 4):', JSON.stringify(text), 'Length:', text.length);
         // consecutive detection tracking
         if (text === lastQRText) {
           consecutiveDetections++;
@@ -312,23 +328,19 @@ document.addEventListener('DOMContentLoaded', () => {
           consecutiveDetections = 1;
         }
         // Strictly prefixed commands; auto-navigate after two consecutive detections
-        const sceneMatch = text.match(/^scene:?([0-9]+)$/i);
-        if (sceneMatch) {
-          const targetScene = parseInt(sceneMatch[1], 10);
-          if (!isNaN(targetScene)) {
-            if (qrResult) {
-              qrResult.innerHTML = `<strong>QR Detected:</strong> scene:${targetScene}`;
-              qrResult.style.display = 'block';
-            }
-            if (consecutiveDetections >= 2 && targetScene >= 0 && targetScene < scenes.length) {
-              scanningQR = false;
-              // small delay to avoid flapping
-              setTimeout(() => {
-                show(targetScene);
-                if (stopCameraBtn) stopCameraBtn.click();
-              }, 300);
-            }
+        const targetScene = resolveSceneFromText(text);
+        console.log('Scene 4: Resolved target scene:', targetScene, 'detections:', consecutiveDetections, 'scenes.length:', scenes.length);
+        if (targetScene !== null && consecutiveDetections >= 1 && targetScene >= 0 && targetScene < scenes.length) {
+          console.log(`Scene 4: Navigating to scene ${targetScene}`);
+          if (qrResult) {
+            qrResult.innerHTML = `<strong>QR Detected:</strong> scene:${targetScene} (detections: ${consecutiveDetections}/1)`;
+            qrResult.style.display = 'block';
           }
+          scanningQR = false;
+          setTimeout(() => {
+            show(targetScene);
+            if (stopCameraBtn) stopCameraBtn.click();
+          }, 150);
         }
       }
     }
@@ -444,4 +456,131 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+  // --- Camera handlers for Scene 7 (duplicate of Scene 4 logic) ---
+  const cameraBtn7 = document.getElementById('cameraBtn7');
+  const stopCameraBtn7 = document.getElementById('stopCameraBtn7');
+  const cameraVideo7 = document.getElementById('cameraVideo7');
+  const cameraCanvas7 = document.getElementById('cameraCanvas7');
+  const qrResult7 = document.getElementById('qrResult7');
+  let cameraStream7 = null;
+  let scanningQR7 = false;
+  let lastQRText7 = '';
+  let consecutiveDetections7 = 0;
+
+  if (cameraVideo7) {
+    cameraVideo7.muted = true;
+    cameraVideo7.playsInline = true;
+  }
+
+  function scanQRCode7() {
+    if (!scanningQR7 || !cameraVideo7 || !cameraCanvas7) return;
+    
+    const canvas = cameraCanvas7;
+    const video = cameraVideo7;
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    
+    if (video.readyState === video.HAVE_ENOUGH_DATA) {
+      canvas.height = video.videoHeight;
+      canvas.width = video.videoWidth;
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const code = window.jsQR ? window.jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: "dontInvert" }) : null;
+      
+      if (code && code.data) {
+        const text = String(code.data).trim();
+        if (qrResult7) {
+          qrResult7.innerHTML = `<strong>QR Code Found:</strong><br>${text}`;
+          qrResult7.style.display = 'block';
+        }
+        console.log('QR Code detected (Scene 7):', JSON.stringify(text), 'Length:', text.length);
+        if (text === lastQRText7) {
+          consecutiveDetections7++;
+        } else {
+          lastQRText7 = text;
+          consecutiveDetections7 = 1;
+        }
+        const targetScene = resolveSceneFromText(text);
+        console.log('Scene 7: Resolved target scene:', targetScene, 'detections7:', consecutiveDetections7, 'scenes.length:', scenes.length);
+        if (targetScene !== null && consecutiveDetections7 >= 1 && targetScene >= 0 && targetScene < scenes.length) {
+          console.log(`Scene 7: Navigating to scene ${targetScene}`);
+          if (qrResult7) {
+            qrResult7.innerHTML = `<strong>QR Detected:</strong> scene:${targetScene} (detections: ${consecutiveDetections7}/1)`;
+            qrResult7.style.display = 'block';
+          }
+          scanningQR7 = false;
+          setTimeout(() => {
+            show(targetScene);
+            if (stopCameraBtn7) stopCameraBtn7.click();
+          }, 150);
+        }
+      }
+    }
+    
+    if (scanningQR7) {
+      requestAnimationFrame(scanQRCode7);
+    }
+  }
+
+  if (cameraBtn7) {
+    cameraBtn7.addEventListener('click', async () => {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        alert('Camera not supported on this device/browser.');
+        return;
+      }
+      if (!window.jsQR) {
+        alert('QR scanner library not loaded. Please refresh the page.');
+        return;
+      }
+      if (qrResult7) { qrResult7.style.display = 'none'; qrResult7.innerHTML = ''; }
+      lastQRText7 = '';
+      consecutiveDetections7 = 0;
+      cameraBtn7.disabled = true;
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
+        cameraStream7 = stream;
+        if (cameraVideo7) {
+          cameraVideo7.srcObject = stream;
+          cameraVideo7.style.display = 'block';
+          if (cameraCanvas7) cameraCanvas7.style.display = 'none';
+          try { 
+            await cameraVideo7.play();
+            scanningQR7 = true;
+            scanQRCode7();
+          } catch(e) { 
+            console.warn('Autoplay issue (Scene 7)', e);
+          }
+        }
+        if (stopCameraBtn7) stopCameraBtn7.disabled = false;
+      } catch (err) {
+        console.error('Camera access error (Scene 7)', err);
+        alert('Unable to access camera: ' + (err && err.message ? err.message : err));
+        cameraBtn7.disabled = false;
+      }
+    });
+  }
+
+  if (stopCameraBtn7) {
+    stopCameraBtn7.addEventListener('click', () => {
+      scanningQR7 = false;
+      if (cameraStream7) {
+        cameraStream7.getTracks().forEach(t => t.stop());
+        cameraStream7 = null;
+      }
+      if (cameraVideo7) {
+        cameraVideo7.pause();
+        cameraVideo7.srcObject = null;
+        cameraVideo7.style.display = 'none';
+      }
+      if (qrResult7) {
+        qrResult7.style.display = 'none';
+        qrResult7.innerHTML = '';
+      }
+      lastQRText7 = '';
+      consecutiveDetections7 = 0;
+      if (cameraBtn7) cameraBtn7.disabled = false;
+      stopCameraBtn7.disabled = true;
+    });
+  }
 });
