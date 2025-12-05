@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Wire persistent nav buttons
   if (backBtn) backBtn.addEventListener('click', () => show(current - 1));
-  if (nextBtn) nextBtn.addEventListener('click', () => show(Math.min(current + 1, 10)));
+  if (nextBtn) nextBtn.addEventListener('click', () => show(Math.min(current + 1, 11)));
 
   // Wire primary action inside each scene (eg the Ready! button),
   // but DO NOT treat the camera open button as a primary navigation action.
