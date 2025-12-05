@@ -296,6 +296,19 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       // Restore scene 6 character if it was swapped on incorrect answer
       if (scene6Char) scene6Char.src = SCENE6_DEFAULT_CHAR;
+      
+      // Reset Scene 11 quiz
+      const quizChoices11 = Array.from(document.querySelectorAll('.scene[data-stage="11"] .quiz-choice'));
+      const quizFeedback11 = document.getElementById('quizFeedback11');
+      quizChoices11.forEach(c => {
+        c.disabled = false;
+        c.style.background = '';
+        c.style.color = '';
+      });
+      if (quizFeedback11) {
+        quizFeedback11.style.display = 'none';
+        quizFeedback11.innerHTML = '';
+      }
     });
   }
 
@@ -496,8 +509,9 @@ document.addEventListener('DOMContentLoaded', () => {
           quizFeedback11.innerHTML = '<strong style="color:#90be6d;">✓ Correct!</strong>';
           quizFeedback11.style.display = 'block';
         }
-        // Award note F and celebrate
+        // Award note F and celebrate with confetti
         handleSpinResult('F');
+        spawnConfetti(26);
       } else {
         choice.style.background = '#f94144';
         choice.style.color = '#fff';
