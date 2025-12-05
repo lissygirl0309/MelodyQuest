@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('mq-stage', String(current));
     if (backBtn) backBtn.disabled = current === 0;
     // Disable Next in camera scenes (4,7,9) and at end
-    if (nextBtn) nextBtn.disabled = (current === 4) || (current === 7) || (current === 9) || (current >= 10);
+    if (nextBtn) nextBtn.disabled = (current === 4) || (current === 7) || (current === 9) || (current >= 11);
     // Award scene 8 prize (note E) once on first visit
     if (current === 8 && !scene8PrizeGiven) {
       handleSpinResult('E');
@@ -473,6 +473,44 @@ document.addEventListener('DOMContentLoaded', () => {
           choice.style.background = '';
           choice.style.color = '';
           if (quizFeedback) quizFeedback.style.display = 'none';
+        }, 1500);
+      }
+    });
+  });
+
+  // --- Multiple choice quiz handler for Scene 11 (2+2 question) ---
+  const quizFeedback11 = document.getElementById('quizFeedback11');
+  const quizChoices11 = Array.from(document.querySelectorAll('.scene[data-stage="11"] .quiz-choice'));
+
+  quizChoices11.forEach(choice => {
+    choice.addEventListener('click', () => {
+      const isCorrect = choice.getAttribute('data-answer') === 'correct';
+      
+      // Disable all choices after selection
+      quizChoices11.forEach(c => c.disabled = true);
+      
+      if (isCorrect) {
+        choice.style.background = '#90be6d';
+        choice.style.color = '#fff';
+        if (quizFeedback11) {
+          quizFeedback11.innerHTML = '<strong style="color:#90be6d;">✓ Correct!</strong>';
+          quizFeedback11.style.display = 'block';
+        }
+        // Award note F and celebrate
+        handleSpinResult('F');
+      } else {
+        choice.style.background = '#f94144';
+        choice.style.color = '#fff';
+        if (quizFeedback11) {
+          quizFeedback11.innerHTML = '<strong style="color:#f94144;">✗ Try again!</strong>';
+          quizFeedback11.style.display = 'block';
+        }
+        // Re-enable choices after a delay for retry
+        setTimeout(() => {
+          quizChoices11.forEach(c => c.disabled = false);
+          choice.style.background = '';
+          choice.style.color = '';
+          if (quizFeedback11) quizFeedback11.style.display = 'none';
         }, 1500);
       }
     });

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Melody Quest</title>
-        <link rel="stylesheet" href="styles.css?v=20251205-8">
+        <link rel="stylesheet" href="styles.css?v=20251205-9">
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 </head>
 <body>
@@ -207,21 +207,43 @@
                                                                         <div class="scene2-row">
                                                                                 <div class="speech-bubble">
                                                                                         <p>🎉 You have unlocked even more information! [additional poster details and inspiration will appear here.]</p>
-                                                                                </div>
+				                                                                </div>
 
-                                                                                <img src="SeminarCharacter3.svg" alt="Seminar Character 3" class="bottom-character">
-                                                                        </div>
-                                                                </section>
+				                                                                <img src="SeminarCharacter3.svg" alt="Seminar Character 3" class="bottom-character">
+				                                                        </div>
+				                                                </section>
 
-                </main>
+				                                                <!-- Scene 11: Multiple choice question (2+2) -->
+				                                                <section class="scene" data-stage="11">
+				                                                        <div class="scene2-row">
+				                                                                <div class="speech-bubble">
+				                                                                        <p>Great job! Let's test your math skills again. Answer this question:</p>
+				                                                                </div>
 
-                <div class="bottombar" role="contentinfo" aria-label="Bottom navigation">
+				                                                                <img src="SeminarCharacter3.svg" alt="Seminar Character 3" class="bottom-character">
+				                                                        </div>
+
+				                                                        <div class="quiz-stage">
+				                                                                <div class="quiz-question">
+				                                                                        <h3>What is 2 + 2?</h3>
+				                                                                </div>
+				                                                                <div class="quiz-choices">
+				                                                                        <button class="quiz-choice" data-answer="wrong">2</button>
+				                                                                        <button class="quiz-choice" data-answer="wrong">3</button>
+				                                                                        <button class="quiz-choice" data-answer="correct">4</button>
+				                                                                        <button class="quiz-choice" data-answer="wrong">5</button>
+				                                                                </div>
+				                                                                <div id="quizFeedback11" class="quiz-feedback"></div>
+				                                                        </div>
+				                                                </section>
+
+				</main>                <div class="bottombar" role="contentinfo" aria-label="Bottom navigation">
                         <div class="bottombar-content">
                                 <button id="backBtn" class="nav-btn">Back</button>
                                 <button id="nextBtn" class="nav-btn">Next</button>
                         </div>
                 </div>
 
-        <script src="script.js?v=20251205-8"></script>
+        <script src="script.js?v=20251205-9"></script>
 </body>
 </html>
