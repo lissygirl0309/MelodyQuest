@@ -123,6 +123,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const SCENE6_DEFAULT_CHAR = 'SeminarCharacter3.svg';
   const SCENE6_INCORRECT_CHAR = 'SeminarCharacter6.svg';
   const SCENE6_CORRECT_CHAR = 'SeminarCharacter5.svg';
+  // Scene 11 quiz character swap targets
+  const scene11Char = document.querySelector('.scene[data-stage="11"] .bottom-character');
+  const SCENE11_DEFAULT_CHAR = 'SeminarCharacter4.svg';
+  const SCENE11_CORRECT_CHAR = 'SeminarCharacter5.svg';
   try { const _p6 = new Image(); _p6.src = SCENE6_CORRECT_CHAR; } catch (e) {}
   // preload swap image to reduce flicker
   try { const _p = new Image(); _p.src = CHAR5_SRC; } catch (e) {}
@@ -312,6 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
         quizFeedback11.style.display = 'none';
         quizFeedback11.innerHTML = '';
       }
+      if (scene11Char) scene11Char.src = SCENE11_DEFAULT_CHAR;
     });
   }
 
@@ -532,6 +537,9 @@ document.addEventListener('DOMContentLoaded', () => {
       quizFeedback11.innerHTML = '<strong style="color:#90be6d;">✓ Correct!</strong>';
       quizFeedback11.style.display = 'block';
     }
+    if (scene11Char) scene11Char.src = SCENE11_CORRECT_CHAR;
+  } else {
+    if (scene11Char) scene11Char.src = SCENE11_DEFAULT_CHAR;
   }
 
   quizChoices11.forEach(choice => {
@@ -554,6 +562,7 @@ document.addEventListener('DOMContentLoaded', () => {
           scene11QuizCompleted = true;
           try { localStorage.setItem(SCENE11_QUIZ_KEY, '1'); } catch (e) {}
         }
+        if (scene11Char) scene11Char.src = SCENE11_CORRECT_CHAR;
       } else {
         choice.style.background = '#f94144';
         choice.style.color = '#fff';
