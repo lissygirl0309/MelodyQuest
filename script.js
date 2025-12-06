@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Optional: keyboard navigation (ArrowRight / ArrowLeft)
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight') show(Math.min(current + 1, 10));
+    if (e.key === 'ArrowRight') show(Math.min(current + 1, 12));
     if (e.key === 'ArrowLeft') show(Math.max(current - 1, 0));
   });
 
