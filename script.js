@@ -42,6 +42,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function show(index) {
     if (index < 0 || index >= scenes.length) return;
+    
+    // Stop all cameras when navigating away from camera scenes
+    const stopCameraButtons = [
+      document.getElementById('stopCameraBtn'),
+      document.getElementById('stopCameraBtn7'),
+      document.getElementById('stopCameraBtn9')
+    ];
+    stopCameraButtons.forEach(btn => {
+      if (btn && !btn.disabled) btn.click();
+    });
+    
     scenes.forEach((s, i) => s.classList.toggle('active', i === index));
     current = index;
     localStorage.setItem('mq-stage', String(current));
