@@ -212,6 +212,11 @@ svg { overflow: visible }
     overflow: hidden;
     z-index: 10002; /* above bottombar and other characters */
     pointer-events: none; /* never block UI interactions */
+    display: none; /* hidden by default */
+}
+/* Only show wrapper when Scene 3 is active */
+.scene[data-stage="3"].active .bottom-character-wrapper {
+    display: block;
 }
 .bottom-character-wrapper .bottom-character-inner {
     display: block;
