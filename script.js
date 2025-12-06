@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const backBtn = document.getElementById('backBtn');
   const nextBtn = document.getElementById('nextBtn');
+  const playAgainBtn = document.getElementById('playAgainBtn');
   const PRIMARY_SELECTOR = '.primary-action';
   const SCENE8_PRIZE_KEY = 'mq-scene8-prize';
   const SCENE10_PRIZE_KEY = 'mq-scene10-prize';
@@ -53,6 +54,16 @@ document.addEventListener('DOMContentLoaded', () => {
     if (backBtn) backBtn.disabled = current === 0;
     // Disable Next in camera scenes (4,7,9) and at end (scene 12)
     if (nextBtn) nextBtn.disabled = (current === 4) || (current === 7) || (current === 9) || (current === 12);
+    // Show Play Again button only in Scene 12, hide Back/Next
+    if (index === 12) {
+      if (backBtn) backBtn.style.display = 'none';
+      if (nextBtn) nextBtn.style.display = 'none';
+      if (playAgainBtn) playAgainBtn.style.display = '';
+    } else {
+      if (backBtn) backBtn.style.display = '';
+      if (nextBtn) nextBtn.style.display = '';
+      if (playAgainBtn) playAgainBtn.style.display = 'none';
+    }
     // Keep Scene 11 character synced with quiz status
     if (index === 11) updateScene11Character();
     // Award scene 8 prize (note E) once on first visit
@@ -80,6 +91,63 @@ document.addEventListener('DOMContentLoaded', () => {
   // Wire persistent nav buttons
   if (backBtn) backBtn.addEventListener('click', () => show(current - 1));
   if (nextBtn) nextBtn.addEventListener('click', () => show(Math.min(current + 1, 12)));
+  if (playAgainBtn) playAgainBtn.addEventListener('click', () => {
+    // Reset all collected notes and prizes
+    try { 
+      localStorage.removeItem('mq-collected'); 
+      localStorage.removeItem('mq-spun'); 
+      localStorage.removeItem(SCENE8_PRIZE_KEY); 
+      localStorage.removeItem(SCENE10_PRIZE_KEY); 
+      localStorage.removeItem(SCENE11_QUIZ_KEY); 
+    } catch (e) {}
+    scene8PrizeGiven = false;
+    scene10PrizeGiven = false;
+    scene11QuizCompleted = false;
+    scene11WrongActive = false;
+    updateCollectedUI();
+    updateScene11Character();
+    
+    // Reset wheel
+    lastRotation = 0;
+    if (wheelGroup) {
+      wheelGroup.style.transition = 'transform 0.2s ease-out';
+      wheelGroup.style.transform = 'rotate(0deg)';
+      setTimeout(() => { wheelGroup.style.transition = ''; }, 250);
+    }
+    if (resultEl) resultEl.textContent = '';
+    if (scene3Char) scene3Char.src = CHAR4_SRC;
+    if (spinBtn) spinBtn.disabled = false;
+    
+    // Reset Scene 6 quiz
+    const quizChoices6 = document.querySelectorAll('.scene[data-stage="6"] .quiz-choice');
+    const quizFeedback6 = document.getElementById('quizFeedback');
+    quizChoices6.forEach(c => {
+      c.disabled = false;
+      c.style.background = '';
+      c.style.color = '';
+    });
+    if (quizFeedback6) {
+      quizFeedback6.style.display = 'none';
+      quizFeedback6.innerHTML = '';
+    }
+    if (scene6Char) scene6Char.src = SCENE6_DEFAULT_CHAR;
+    
+    // Reset Scene 11 quiz
+    const quizChoices11 = document.querySelectorAll('.scene[data-stage="11"] .quiz-choice');
+    const quizFeedback11 = document.getElementById('quizFeedback11');
+    quizChoices11.forEach(c => {
+      c.disabled = false;
+      c.style.background = '';
+      c.style.color = '';
+    });
+    if (quizFeedback11) {
+      quizFeedback11.style.display = 'none';
+      quizFeedback11.innerHTML = '';
+    }
+    
+    // Navigate to scene 0
+    show(0);
+  });
 
   // Wire primary action inside each scene (eg the Ready! button),
   // but DO NOT treat the camera open button as a primary navigation action.
