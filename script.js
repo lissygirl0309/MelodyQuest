@@ -44,14 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (index < 0 || index >= scenes.length) return;
     
     // Stop all cameras when navigating away from camera scenes
-    const stopCameraButtons = [
-      document.getElementById('stopCameraBtn'),
-      document.getElementById('stopCameraBtn7'),
-      document.getElementById('stopCameraBtn9')
-    ];
-    stopCameraButtons.forEach(btn => {
-      if (btn && !btn.disabled) btn.click();
-    });
+    stopAllCameras();
     
     scenes.forEach((s, i) => s.classList.toggle('active', i === index));
     current = index;
@@ -324,6 +317,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // init collected UI
   updateCollectedUI();
+
+  // Global function to stop all cameras
+  function stopAllCameras() {
+    // Stop Scene 4 camera
+    const stopBtn = document.getElementById('stopCameraBtn');
+    if (stopBtn && !stopBtn.disabled) {
+      stopBtn.click();
+    }
+    // Stop Scene 7 camera
+    const stopBtn7 = document.getElementById('stopCameraBtn7');
+    if (stopBtn7 && !stopBtn7.disabled) {
+      stopBtn7.click();
+    }
+    // Stop Scene 9 camera
+    const stopBtn9 = document.getElementById('stopCameraBtn9');
+    if (stopBtn9 && !stopBtn9.disabled) {
+      stopBtn9.click();
+    }
+  }
 
   // --- Camera handlers for Scene 4 with QR scanning ---
   const cameraBtn = document.getElementById('cameraBtn');
