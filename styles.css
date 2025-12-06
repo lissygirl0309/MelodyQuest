@@ -362,7 +362,7 @@ svg { overflow: visible }
 
 /* Move Scene 7 character down by 5px */
 .scene[data-stage="7"] .bottom-character {
-    bottom: 11px; /* was 16px globally; lowered by 5px */
+    bottom: 11px !important; /* was 16px globally; lowered by 5px */
 }
 
 /* Move Scene 6 incorrect-answer character (SeminarCharacter6) down by 4px */
