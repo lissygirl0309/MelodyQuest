@@ -443,7 +443,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --- Multiple choice quiz handler for Scene 6 ---
-  const quizChoices = document.querySelectorAll('.quiz-choice');
+  const quizChoices = document.querySelectorAll('.scene[data-stage="6"] .quiz-choice');
   const quizFeedback = document.getElementById('quizFeedback');
 
   quizChoices.forEach(choice => {
@@ -506,7 +506,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         // Award note F and celebrate with confetti
         handleSpinResult('F');
-        spawnConfetti(26);
       } else {
         choice.style.background = '#f94144';
         choice.style.color = '#fff';
