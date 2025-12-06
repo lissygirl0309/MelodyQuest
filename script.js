@@ -52,6 +52,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (backBtn) backBtn.disabled = current === 0;
     // Disable Next in camera scenes (4,7,9) and at end (scene 12)
     if (nextBtn) nextBtn.disabled = (current === 4) || (current === 7) || (current === 9) || (current === 12);
+    // Ensure Scene 11 shows default character until answered correctly
+    if (index === 11 && !scene11QuizCompleted && scene11Char) {
+      scene11Char.src = SCENE11_DEFAULT_CHAR;
+    }
     // Award scene 8 prize (note E) once on first visit
     if (current === 8 && !scene8PrizeGiven) {
       handleSpinResult('E');
