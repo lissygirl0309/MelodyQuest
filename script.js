@@ -78,8 +78,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // but DO NOT treat the camera open button as a primary navigation action.
   scenes.forEach(scene => {
     const primary = scene.querySelector(PRIMARY_SELECTOR);
-    // Do not auto-wire navigation for camera or spin buttons
-    if (primary && primary.id !== 'cameraBtn' && primary.id !== 'cameraBtn7' && primary.id !== 'cameraBtn9' && primary.id !== 'spinBtn') {
+    // Do not auto-wire navigation for camera, spin, or melody buttons
+    if (primary && primary.id !== 'cameraBtn' && primary.id !== 'cameraBtn7' && primary.id !== 'cameraBtn9' && primary.id !== 'spinBtn' && primary.id !== 'playMelodyBtn') {
       primary.addEventListener('click', () => {
         // move to next scene if possible (respect cap at 6)
         show(Math.min(current + 1, 6));
