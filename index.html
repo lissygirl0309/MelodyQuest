@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Melody Quest</title>
-        <link rel="stylesheet" href="styles.css?v=20251205-19">
+        <link rel="stylesheet" href="styles.css?v=20251205-20">
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 </head>
 <body>
@@ -237,6 +237,22 @@
 				                                                        </div>
 				                                                </section>
 
+				                                                <!-- Scene 12: Final melody playback -->
+				                                                <section class="scene" data-stage="12">
+				                                                        <div class="scene2-row">
+				                                                                <div class="speech-bubble">
+				                                                                        <p>🎵 Congratulations! You've collected all the notes. Let's hear your melody!</p>
+				                                                                </div>
+
+				                                                                <img src="SeminarCharacter5.svg" alt="Seminar Character 5" class="bottom-character">
+				                                                        </div>
+
+				                                                        <div class="quiz-stage">
+				                                                                <button id="playMelodyBtn" class="primary-action" style="font-size: 1.2em; padding: 15px 30px;">▶ Play Melody</button>
+				                                                                <div id="melodyStatus" style="margin-top: 20px; font-size: 1.1em; color: #333;"></div>
+				                                                        </div>
+				                                                </section>
+
 				</main>                <div class="bottombar" role="contentinfo" aria-label="Bottom navigation">
                         <div class="bottombar-content">
                                 <button id="backBtn" class="nav-btn">Back</button>
@@ -244,6 +260,6 @@
                         </div>
                 </div>
 
-        <script src="script.js?v=20251205-19"></script>
+        <script src="script.js?v=20251205-20"></script>
 </body>
 </html>

@@ -46,8 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
     current = index;
     localStorage.setItem('mq-stage', String(current));
     if (backBtn) backBtn.disabled = current === 0;
-    // Disable Next in camera scenes (4,7,9) and at end (scene 11)
-    if (nextBtn) nextBtn.disabled = (current === 4) || (current === 7) || (current === 9) || (current === 11);
+    // Disable Next in camera scenes (4,7,9) and at end (scene 12)
+    if (nextBtn) nextBtn.disabled = (current === 4) || (current === 7) || (current === 9) || (current === 12);
     // Award scene 8 prize (note E) once on first visit
     if (current === 8 && !scene8PrizeGiven) {
       handleSpinResult('E');
@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Wire persistent nav buttons
   if (backBtn) backBtn.addEventListener('click', () => show(current - 1));
-  if (nextBtn) nextBtn.addEventListener('click', () => show(Math.min(current + 1, 11)));
+  if (nextBtn) nextBtn.addEventListener('click', () => show(Math.min(current + 1, 12)));
 
   // Wire primary action inside each scene (eg the Ready! button),
   // but DO NOT treat the camera open button as a primary navigation action.
@@ -800,6 +800,43 @@ document.addEventListener('DOMContentLoaded', () => {
       consecutiveDetections9 = 0;
       if (cameraBtn9) cameraBtn9.disabled = false;
       stopCameraBtn9.disabled = true;
+    });
+  }
+
+  // --- Scene 12: Melody playback ---
+  const playMelodyBtn = document.getElementById('playMelodyBtn');
+  const melodyStatus = document.getElementById('melodyStatus');
+
+  if (playMelodyBtn) {
+    playMelodyBtn.addEventListener('click', () => {
+      const collected = loadCollected();
+      if (collected.length === 0) {
+        if (melodyStatus) melodyStatus.textContent = 'No notes collected yet!';
+        return;
+      }
+
+      playMelodyBtn.disabled = true;
+      if (melodyStatus) melodyStatus.textContent = 'Playing melody...';
+
+      // Play notes with timing: first 3 eighth notes (300ms each), last 2 quarter notes (600ms each)
+      let delay = 0;
+      collected.forEach((note, index) => {
+        const duration = index < 3 ? 300 : 600; // Eighth notes for first 3, quarter notes for last 2
+        const gap = index < 3 ? 350 : 700; // Slightly longer gap than duration
+        
+        setTimeout(() => {
+          playNote(note, duration);
+          if (melodyStatus) melodyStatus.textContent = `Playing: ${note}`;
+        }, delay);
+        
+        delay += gap;
+      });
+
+      // Re-enable button after melody finishes
+      setTimeout(() => {
+        playMelodyBtn.disabled = false;
+        if (melodyStatus) melodyStatus.textContent = '🎵 Melody complete!';
+      }, delay + 500);
     });
   }
 });
