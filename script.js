@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const SCENE6_CORRECT_CHAR = 'SeminarCharacter5.svg';
   // Scene 11 quiz character swap targets
   const scene11Char = document.querySelector('.scene[data-stage="11"] .bottom-character');
-  const SCENE11_DEFAULT_CHAR = 'SeminarCharacter4.svg';
+   const SCENE11_DEFAULT_CHAR = 'SeminarCharacter3.svg';
   const SCENE11_CORRECT_CHAR = 'SeminarCharacter5.svg';
   try { const _p6 = new Image(); _p6.src = SCENE6_CORRECT_CHAR; } catch (e) {}
   // preload swap image to reduce flicker
