@@ -28,14 +28,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const PRIMARY_SELECTOR = '.primary-action';
   const SCENE8_PRIZE_KEY = 'mq-scene8-prize';
   const SCENE10_PRIZE_KEY = 'mq-scene10-prize';
+  const SCENE11_QUIZ_KEY = 'mq-scene11-quiz';
   let scene8PrizeGiven = false;
   let scene10PrizeGiven = false;
+  let scene11QuizCompleted = false;
 
   // Restore saved stage or start at 0
   let current = parseInt(localStorage.getItem('mq-stage') || '0', 10);
   if (Number.isNaN(current) || current < 0 || current >= scenes.length) current = 0;
   try { scene8PrizeGiven = localStorage.getItem(SCENE8_PRIZE_KEY) === '1'; } catch (e) {}
   try { scene10PrizeGiven = localStorage.getItem(SCENE10_PRIZE_KEY) === '1'; } catch (e) {}
+  try { scene11QuizCompleted = localStorage.getItem(SCENE11_QUIZ_KEY) === '1'; } catch (e) {}
 
   function show(index) {
     if (index < 0 || index >= scenes.length) return;
@@ -262,9 +265,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // Reset handler: clear collected notes and spun flag, reset visuals
   if (resetBtn) {
     resetBtn.addEventListener('click', () => {
-      try { localStorage.removeItem('mq-collected'); localStorage.removeItem('mq-spun'); localStorage.removeItem(SCENE8_PRIZE_KEY); localStorage.removeItem(SCENE10_PRIZE_KEY); } catch (e) {}
+      try { localStorage.removeItem('mq-collected'); localStorage.removeItem('mq-spun'); localStorage.removeItem(SCENE8_PRIZE_KEY); localStorage.removeItem(SCENE10_PRIZE_KEY); localStorage.removeItem(SCENE11_QUIZ_KEY); } catch (e) {}
       scene8PrizeGiven = false;
       scene10PrizeGiven = false;
+      scene11QuizCompleted = false;
       updateCollectedUI();
       // reset wheel rotation
       lastRotation = 0;
@@ -506,8 +510,12 @@ document.addEventListener('DOMContentLoaded', () => {
           quizFeedback11.innerHTML = '<strong style="color:#90be6d;">✓ Correct!</strong>';
           quizFeedback11.style.display = 'block';
         }
-        // Award note F and celebrate with confetti
-        handleSpinResult('F');
+        // Award note F and celebrate with confetti (only once)
+        if (!scene11QuizCompleted) {
+          handleSpinResult('F');
+          scene11QuizCompleted = true;
+          try { localStorage.setItem(SCENE11_QUIZ_KEY, '1'); } catch (e) {}
+        }
       } else {
         choice.style.background = '#f94144';
         choice.style.color = '#fff';
