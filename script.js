@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let scene8PrizeGiven = false;
   let scene10PrizeGiven = false;
   let scene11QuizCompleted = false;
+  let scene11WrongActive = false;
 
   // Restore saved stage or start at 0
   let current = parseInt(localStorage.getItem('mq-stage') || '0', 10);
@@ -52,10 +53,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (backBtn) backBtn.disabled = current === 0;
     // Disable Next in camera scenes (4,7,9) and at end (scene 12)
     if (nextBtn) nextBtn.disabled = (current === 4) || (current === 7) || (current === 9) || (current === 12);
-    // Ensure Scene 11 shows default character until answered correctly
-    if (index === 11 && !scene11QuizCompleted && scene11Char) {
-      scene11Char.src = SCENE11_DEFAULT_CHAR;
-    }
+    // Keep Scene 11 character synced with quiz status
+    if (index === 11) updateScene11Character();
     // Award scene 8 prize (note E) once on first visit
     if (current === 8 && !scene8PrizeGiven) {
       handleSpinResult('E');
@@ -129,8 +128,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const SCENE6_CORRECT_CHAR = 'SeminarCharacter5.svg';
   // Scene 11 quiz character swap targets
   const scene11Char = document.querySelector('.scene[data-stage="11"] .bottom-character');
-   const SCENE11_DEFAULT_CHAR = 'SeminarCharacter3.svg';
+  const SCENE11_DEFAULT_CHAR = 'SeminarCharacter3.svg';
+  const SCENE11_INCORRECT_CHAR = 'SeminarCharacter6.svg';
   const SCENE11_CORRECT_CHAR = 'SeminarCharacter5.svg';
+
+  // Helper to keep Scene 11 character in sync with quiz state
+  function updateScene11Character() {
+    if (!scene11Char) return;
+    if (scene11QuizCompleted) {
+      scene11Char.src = SCENE11_CORRECT_CHAR;
+    } else if (scene11WrongActive) {
+      scene11Char.src = SCENE11_INCORRECT_CHAR;
+    } else {
+      scene11Char.src = SCENE11_DEFAULT_CHAR;
+    }
+  }
   try { const _p6 = new Image(); _p6.src = SCENE6_CORRECT_CHAR; } catch (e) {}
   // preload swap image to reduce flicker
   try { const _p = new Image(); _p.src = CHAR5_SRC; } catch (e) {}
@@ -320,12 +332,14 @@ document.addEventListener('DOMContentLoaded', () => {
         quizFeedback11.style.display = 'none';
         quizFeedback11.innerHTML = '';
       }
-      if (scene11Char) scene11Char.src = SCENE11_DEFAULT_CHAR;
+      scene11WrongActive = false;
+      updateScene11Character();
     });
   }
 
-  // init collected UI
+  // init collected UI and scene 11 character state
   updateCollectedUI();
+  updateScene11Character();
 
   // Global function to stop all cameras
   function stopAllCameras() {
@@ -530,6 +544,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // If quiz was already completed, disable buttons and show completed state
   if (scene11QuizCompleted) {
+    scene11WrongActive = false;
     quizChoices11.forEach(c => {
       c.disabled = true;
       if (c.getAttribute('data-answer') === 'correct') {
@@ -541,10 +556,8 @@ document.addEventListener('DOMContentLoaded', () => {
       quizFeedback11.innerHTML = '<strong style="color:#90be6d;">✓ Correct!</strong>';
       quizFeedback11.style.display = 'block';
     }
-    if (scene11Char) scene11Char.src = SCENE11_CORRECT_CHAR;
-  } else {
-    if (scene11Char) scene11Char.src = SCENE11_DEFAULT_CHAR;
   }
+  updateScene11Character();
 
   quizChoices11.forEach(choice => {
     choice.addEventListener('click', () => {
@@ -560,13 +573,14 @@ document.addEventListener('DOMContentLoaded', () => {
           quizFeedback11.innerHTML = '<strong style="color:#90be6d;">✓ Correct!</strong>';
           quizFeedback11.style.display = 'block';
         }
+        scene11WrongActive = false;
         // Award note F and celebrate with confetti (only once)
         if (!scene11QuizCompleted) {
           handleSpinResult('F');
           scene11QuizCompleted = true;
           try { localStorage.setItem(SCENE11_QUIZ_KEY, '1'); } catch (e) {}
         }
-        if (scene11Char) scene11Char.src = SCENE11_CORRECT_CHAR;
+        updateScene11Character();
       } else {
         choice.style.background = '#f94144';
         choice.style.color = '#fff';
@@ -574,6 +588,8 @@ document.addEventListener('DOMContentLoaded', () => {
           quizFeedback11.innerHTML = '<strong style="color:#f94144;">✗ Try again!</strong>';
           quizFeedback11.style.display = 'block';
         }
+        scene11WrongActive = true;
+        updateScene11Character();
         // Re-enable choices after a delay for retry
         setTimeout(() => {
           quizChoices11.forEach(c => c.disabled = false);
@@ -853,6 +869,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
       playMelodyBtn.disabled = true;
       if (melodyStatus) melodyStatus.textContent = 'Playing melody...';
+
+      // Celebrate when the melody starts
+      spawnConfetti(24);
 
       // Play notes with timing: first 3 eighth notes (300ms each), last 2 quarter notes (600ms each)
       let delay = 0;

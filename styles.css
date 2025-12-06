@@ -370,6 +370,21 @@ svg { overflow: visible }
     bottom: 11px !important; /* was 16px globally; lowered by 5px */
 }
 
+/* Move Scene 11 incorrect-answer character (SeminarCharacter6) down by 5px */
+.scene[data-stage="11"] .bottom-character[src="SeminarCharacter6.svg"] {
+    bottom: 11px; /* was 16px globally; lowered by 5px */
+}
+
+/* Move Scene 11 correct-answer character (SeminarCharacter5) down by 2px */
+.scene[data-stage="11"] .bottom-character[src="SeminarCharacter5.svg"] {
+    bottom: 14px; /* was 16px globally; lowered by 2px */
+}
+
+/* Move Scene 12 character down by 2px */
+.scene[data-stage="12"] .bottom-character {
+    bottom: 14px !important; /* was 16px globally; lowered by 2px */
+}
+
 /* Move Scene 6 incorrect-answer character (SeminarCharacter6) down by 4px */
 .scene[data-stage="6"] .bottom-character[src="SeminarCharacter6.svg"] {
     bottom: 11px; /* lowered one more pixel from 12px */
