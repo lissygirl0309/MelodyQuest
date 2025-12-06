@@ -490,6 +490,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const quizFeedback11 = document.getElementById('quizFeedback11');
   const quizChoices11 = Array.from(document.querySelectorAll('.scene[data-stage="11"] .quiz-choice'));
 
+  console.log('Scene 11 quiz choices found:', quizChoices11.length);
+
   quizChoices11.forEach(choice => {
     choice.addEventListener('click', () => {
       const isCorrect = choice.getAttribute('data-answer') === 'correct';
