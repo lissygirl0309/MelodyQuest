@@ -496,6 +496,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
   console.log('Scene 11 quiz choices found:', quizChoices11.length);
 
+  // If quiz was already completed, disable buttons and show completed state
+  if (scene11QuizCompleted) {
+    quizChoices11.forEach(c => {
+      c.disabled = true;
+      if (c.getAttribute('data-answer') === 'correct') {
+        c.style.background = '#90be6d';
+        c.style.color = '#fff';
+      }
+    });
+    if (quizFeedback11) {
+      quizFeedback11.innerHTML = '<strong style="color:#90be6d;">✓ Correct!</strong>';
+      quizFeedback11.style.display = 'block';
+    }
+  }
+
   quizChoices11.forEach(choice => {
     choice.addEventListener('click', () => {
       const isCorrect = choice.getAttribute('data-answer') === 'correct';
